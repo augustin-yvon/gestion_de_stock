@@ -2,6 +2,7 @@ import tkinter as tk
 from tkinter import *
 import mysql.connector
 from tkinter import ttk
+import sqlite3
 
 # Connexion à la base de données
 db = mysql.connector.connect(host="localhost", user="root", password="Troll1394@@@@", database="boutique")
@@ -12,7 +13,7 @@ window.title("Liste des produits")
 
 # Récupération des produits depuis la base de données
 cursor = db.cursor()
-cursor.execute("select * from produit")
+cursor.execute("select * from produits")
 produits = cursor.fetchall()
 
 # Création du tableau pour afficher les produits
@@ -106,11 +107,11 @@ def ajouter_produit():
         categorie_id = cursor.fetchone()[0]
 
         # Màj de la base de données
-        cursor.execute("insert into produit (nom, description, prix, quantite, id_categorie) values (%s, %s, %s, %s, %s)", (nom, description, prix, quantite, categorie_id))
+        cursor.execute("insert into produits (nom, description, prix, quantite, id_categorie) values (%s, %s, %s, %s, %s)", (nom, description, prix, quantite, categorie_id))
         db.commit()
 
         # Affichage du produit dans le tableau
-        cursor.execute("select * from produit where nom = '{}'".format(nom))
+        cursor.execute("select * from produits where nom = '{}'".format(nom))
         produit = cursor.fetchone()
         id_produit = produit[0]
         categorie_id = produit[5]
@@ -130,7 +131,7 @@ def ajouter_produit():
 def supprimer_produit(id_produit):
     # Récupère le nom du produit pour le supprimer de la base de données
     nom = tableau.item(id_produit, "values")[0]
-    cursor.execute("delete from produit where nom = '{}'".format(nom))
+    cursor.execute("delete from produits where nom = '{}'".format(nom))
     db.commit()
     # Suppression de la ligne du tableau avec l'id de la ligne 
     tableau.delete(id_produit)
@@ -219,11 +220,11 @@ def modifier_produit():
         # Màj de la base de données
         cursor.execute("select id from categorie where nom = '{}'".format(categorie_nom))
         categorie_id = cursor.fetchone()[0]
-        cursor.execute("insert into produit (nom, description, prix, quantite, id_categorie) values ('{}', '{}', {}, {}, '{}')".format(nom, description, prix, quantite, categorie_id))
+        cursor.execute("insert into produits (nom, description, prix, quantite, id_categorie) values ('{}', '{}', {}, {}, '{}')".format(nom, description, prix, quantite, categorie_id))
         db.commit()
 
         # Affichage du produit dans le tableau
-        cursor.execute("select * from produit where nom = '{}'".format(nom))
+        cursor.execute("select * from produits where nom = '{}'".format(nom))
         produit = cursor.fetchone()
         id_produit = produit[0]
         categorie_id = produit[5]
