@@ -2,7 +2,6 @@ import tkinter as tk
 from tkinter import *
 import mysql.connector
 from tkinter import ttk
-import sqlite3
 
 # Connexion à la base de données
 db = mysql.connector.connect(host="localhost", user="root", password="Troll1394@@@@", database="boutique")
